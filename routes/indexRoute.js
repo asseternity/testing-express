@@ -5,7 +5,7 @@ const prisma = require('../prismaClient');
 const array = [];
 
 index.get("/", (req, res) => {
-  res.json({ name: "frodo" });
+  res.json({ name: "someName" });
 });
 
 index.get("/test", (req, res) => res.json({ array }));
@@ -15,10 +15,10 @@ index.post("/test", (req, res) => {
   res.send('success!');
 });
 
-index.get('/post/:post_id', async (req, res) => {
-  const correctPost = await prisma.post.findFirst({
+index.get('/post/:post_author', async (req, res) => {
+  const correctPost = await prisma.post.findMany({
       where: {
-          id: parseInt(req.params.post_id)
+          author: req.params.post_author
       }
   });
   if (!correctPost) {

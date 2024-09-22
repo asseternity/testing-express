@@ -23,7 +23,7 @@ test("test route works", done => {
         .send({ item: 'hey' })
         .then(() => {
             request(app)
-                .get('test')
+                .get('/test')
                 .expect({ array: ['hey'] }, done);
         });
 });
@@ -32,21 +32,21 @@ test("test route works", done => {
 
 // seed data
 beforeAll(async () => {
-    // Clear existing data
+    // // Clear existing data
     await prisma.comment.deleteMany();
     await prisma.post.deleteMany();    
     // Seed posts
     const post1 = await prisma.post.create({
         data: {
             text: "First post",
-            author: "Author One",
+            author: "Author1",
             added: new Date(),
         },
     });
     const post2 = await prisma.post.create({
         data: {
             text: "Second post",
-            author: "Author Two",
+            author: "Author2",
             added: new Date(),
         },
     });
@@ -68,9 +68,12 @@ beforeAll(async () => {
 });
 
 // test db
-test("index route works", done => {
+test("DB works", done => {
     request(app)
-        .get('/post/1')
-        .expect({ text: "First post" })
-        .expect(200, done);
+        .get('/post/Author1')
+        .expect(200)
+        .expect(response => {
+            expect(response.body[0].text).toBe("First post")
+        })
+        .end(done);
 });
